@@ -1,5 +1,7 @@
 # pyxpo-secure-store
 
+[![CI](https://github.com/pyxpo/pyxpo-secure-store/actions/workflows/ci.yml/badge.svg)](https://github.com/pyxpo/pyxpo-secure-store/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/pyxpo-secure-store)](https://pypi.org/project/pyxpo-secure-store/) [![Python](https://img.shields.io/pypi/pyversions/pyxpo-secure-store)](https://pypi.org/project/pyxpo-secure-store/) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 Encrypted key-value storage for secrets in [pyxpo](https://github.com/pyxpo/pyxpo) apps, written in Python: sign-in
 tokens, API keys and PINs in the iOS Keychain or the Android Keystore, with an optional Face ID, Touch ID or
 fingerprint check. The names follow [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/), in
