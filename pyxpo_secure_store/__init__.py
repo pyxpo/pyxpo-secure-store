@@ -12,7 +12,8 @@ system asks for Face ID / Touch ID / fingerprint before the value can be read (a
 
 Values are strings. Keep them small (a few KB); use pyxpo-storage or pyxpo-file-system for bulk data.
 iOS Keychain items survive app deletion; Android data does not.
-On the desktop (tests, previews) values live in memory only and nothing is encrypted.
+On the web page values go to `localStorage` (plain text). On the desktop (tests, previews) values live in memory
+only and nothing is encrypted.
 """
 from __future__ import annotations
 
@@ -71,7 +72,7 @@ def _native() -> bool:
 
 
 async def is_available_async() -> bool:
-    """True on iOS and Android when the module is linked; False on the desktop."""
+    """True on iOS, Android and the web page when the module is linked; False on the desktop."""
     if platform() == "desktop":
         return False
     try:

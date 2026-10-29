@@ -51,7 +51,8 @@ await SecureStore.delete_item_async("session_token")
 | --- | --- |
 | Android, API 24+ | Get, set, delete. Encryption with an Android Keystore key. `requireAuthentication` needs Android 10 or newer. |
 | iOS 15+ | Get, set, delete in the Keychain, with `keychainAccessible`, `keychainService` and `accessGroup`. Face ID or Touch ID with `requireAuthentication`. |
-| Web page and desktop window (`pyxpo run web` / `pyxpo run desktop`) | An in-memory dict that is lost when the process ends. `is_available_async()` is `False`. Nothing is encrypted. |
+| Web page (`pyxpo run web`, `pyxpo build web`) | The site's `localStorage`: values survive a reload, stored as plain text. `requireAuthentication` raises an error. |
+| Desktop window (`pyxpo run desktop`) | An in-memory dict that is lost when the process ends. `is_available_async()` is `False`. Nothing is encrypted. |
 
 Requires Python 3.9+ and `pyxpo>=0.1.0a1`.
 
@@ -195,7 +196,11 @@ your server.
 
 ## Web and desktop
 
-Values live in a Python dict for the life of the process:
+On the web page values go to the site's `localStorage` under `pyxpo-secure-store:<service>-<key>`, so a signed-in
+user stays signed in after a reload. The browser has no keychain: any script on the page can read them, and
+`requireAuthentication` raises `RuntimeError`. Store only what a web app would keep anyway, such as a session token.
+
+On the desktop window values live in a Python dict for the life of the process:
 
 ```python
 await SecureStore.set_item_async("k", "v")
@@ -204,8 +209,8 @@ await SecureStore.is_available_async()           # False
 await SecureStore.can_use_biometric_authentication_async()   # False
 ```
 
-Treat this as a stand-in for tests and previews. Do not rely on it for real secrets, and `requireAuthentication` has
-no effect there.
+Treat the desktop store as a stand-in for tests and previews. Do not rely on it for real secrets, and
+`requireAuthentication` has no effect there.
 
 ## Recipe: keep a user signed in
 

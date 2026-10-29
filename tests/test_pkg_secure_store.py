@@ -61,3 +61,23 @@ def test_native_calls():
         assert run(SecureStore.can_use_biometric_authentication_async()) is True
         assert run(SecureStore.is_available_async()) is True
     assert SecureStore._memory == {}
+
+
+def test_web_local_storage(monkeypatch):
+    import sys
+    import types
+
+    from pyxpo_secure_store import web
+
+    data = {}
+    ls = types.SimpleNamespace(getItem=data.get, setItem=data.__setitem__, removeItem=lambda k: data.pop(k, None))
+    monkeypatch.setitem(sys.modules, "js", types.SimpleNamespace(localStorage=ls))
+    o = {"keychainService": "app"}
+    assert web.call("get", ["token", o]) is None
+    web.call("set", ["token", "abc", o])
+    assert data == {"pyxpo-secure-store:app-token": "abc"}
+    assert web.call("get", ["token", o]) == "abc"
+    web.call("delete", ["token", o])
+    assert data == {} and web.call("canUseBiometric", []) is False
+    with pytest.raises(RuntimeError, match="requireAuthentication"):
+        web.call("get", ["token", {"requireAuthentication": True}])
