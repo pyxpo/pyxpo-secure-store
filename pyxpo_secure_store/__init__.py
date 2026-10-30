@@ -22,7 +22,7 @@ from typing import Any, Dict, Optional
 
 from pyxpo.module_api import call, platform, require_linked
 
-__version__ = "0.1.0a1"
+__version__ = "0.1.0a2"
 
 # keychainAccessible values (iOS); same numbers as expo-secure-store.
 AFTER_FIRST_UNLOCK = 0
